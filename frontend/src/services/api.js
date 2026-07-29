@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL
+  // Fall back to /api so local dev works via the Vite proxy even without an env file
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/api'
 })
 
 api.interceptors.request.use(config => {

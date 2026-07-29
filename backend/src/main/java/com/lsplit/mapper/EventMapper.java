@@ -33,6 +33,7 @@ public class EventMapper {
                                                       int expenseCount, BigDecimal totalAmount) {
         return EventDetailResponse.builder()
                 .id(event.getId())
+                .groupId(event.getGroup().getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
                 .eventDate(event.getEventDate())

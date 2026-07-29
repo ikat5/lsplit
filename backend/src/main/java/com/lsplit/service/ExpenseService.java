@@ -81,8 +81,7 @@ public class ExpenseService {
                 BigDecimal perShare = total.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP);
                 BigDecimal allocated = BigDecimal.ZERO;
                 for (int i = 0; i < count; i++) {
-                    User u = userRepository.findById(participants.get(i))
-                            .orElseThrow(() -> new ResourceNotFoundException("Participant not found"));
+                    User u = requireGroupMember(participants.get(i), groupId);
                     BigDecimal amt;
                     if (i == count - 1) {
                         amt = total.subtract(allocated);
@@ -104,8 +103,7 @@ public class ExpenseService {
                     throw new BadRequestException("Share amounts must sum to the total amount");
                 }
                 for (ShareInput si : req.getShares()) {
-                    User u = userRepository.findById(si.getUserId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Participant not found"));
+                    User u = requireGroupMember(si.getUserId(), groupId);
                     shares.add(buildShare(item, u, si.getValue()));
                 }
             }
@@ -123,8 +121,7 @@ public class ExpenseService {
                 BigDecimal pctAllocated = BigDecimal.ZERO;
                 for (int i = 0; i < pctShares.size(); i++) {
                     ShareInput si = pctShares.get(i);
-                    User u = userRepository.findById(si.getUserId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Participant not found"));
+                    User u = requireGroupMember(si.getUserId(), groupId);
                     BigDecimal amt;
                     if (i == pctShares.size() - 1) {
                         amt = total.subtract(pctAllocated);
@@ -139,6 +136,14 @@ public class ExpenseService {
             default -> throw new BadRequestException("Unknown split type: " + req.getSplitType());
         }
         return shares;
+    }
+
+    private User requireGroupMember(UUID userId, UUID groupId) {
+        if (!groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, userId)) {
+            throw new BadRequestException("Participant is not a member of this group");
+        }
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Participant not found"));
     }
 
     private ExpenseShare buildShare(ExpenseItem item, User user, BigDecimal amount) {

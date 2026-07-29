@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getEventById, deleteEvent } from '../services/eventService'
+import { getGroupById } from '../services/groupService'
 import { deleteExpense } from '../services/expenseService'
 import ExpenseCard from '../components/ExpenseCard'
 import AddExpenseModal from '../components/AddExpenseModal'
@@ -19,9 +20,10 @@ export default function EventView() {
   const [error, setError] = useState('')
   const [showAddExpense, setShowAddExpense] = useState(false)
 
-  // groupMembers and groupId may be passed as navigation state from GroupView
-  const groupMembers = location.state?.groupMembers || []
-  const groupId = location.state?.groupId
+  // groupMembers may be passed as navigation state from GroupView; on a hard
+  // refresh that state is gone, so we fetch them via the event's groupId.
+  const [groupMembers, setGroupMembers] = useState(location.state?.groupMembers || [])
+  const groupId = location.state?.groupId || event?.groupId
 
   const loadEvent = useCallback(async () => {
     setLoading(true)
@@ -29,6 +31,10 @@ export default function EventView() {
     try {
       const data = await getEventById(eventId)
       setEvent(data)
+      if (!location.state?.groupMembers?.length && data.groupId) {
+        const groupData = await getGroupById(data.groupId)
+        setGroupMembers(groupData.members || [])
+      }
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -38,7 +44,7 @@ export default function EventView() {
     } finally {
       setLoading(false)
     }
-  }, [eventId])
+  }, [eventId, location.state])
 
   useEffect(() => {
     loadEvent()
@@ -177,7 +183,7 @@ export default function EventView() {
       {showAddExpense && (
         <AddExpenseModal
           eventId={eventId}
-          groupMembers={groupMembers.length > 0 ? groupMembers : (event?.expenses?.[0] ? [] : [])}
+          groupMembers={groupMembers}
           show={showAddExpense}
           onClose={() => setShowAddExpense(false)}
           onSuccess={() => {

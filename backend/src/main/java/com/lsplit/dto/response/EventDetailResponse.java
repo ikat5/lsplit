@@ -19,6 +19,7 @@ import java.util.UUID;
 public class EventDetailResponse {
 
     private UUID id;
+    private UUID groupId;
     private String title;
     private String description;
 

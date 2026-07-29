@@ -100,6 +100,8 @@ class ExpenseServiceTest {
 
         when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, creatorId)).thenReturn(true);
         when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, user1Id)).thenReturn(true);
+        when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, user2Id)).thenReturn(true);
+        when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, user3Id)).thenReturn(true);
 
         mockUser(user1Id);
         mockUser(user2Id);
@@ -138,6 +140,8 @@ class ExpenseServiceTest {
 
         when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, creatorId)).thenReturn(true);
         when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, user1Id)).thenReturn(true);
+        when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, user2Id)).thenReturn(true);
+        when(groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, user3Id)).thenReturn(true);
 
         mockUser(user1Id);
         mockUser(user2Id);

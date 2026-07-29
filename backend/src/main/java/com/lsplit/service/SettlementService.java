@@ -40,6 +40,9 @@ public class SettlementService {
         if (!groupMemberRepository.existsByGroup_IdAndUser_Id(groupId, req.getPayeeId())) {
             throw new BadRequestException("Payee is not a member of this group");
         }
+        if (payerId.equals(req.getPayeeId())) {
+            throw new BadRequestException("You cannot record a settlement to yourself");
+        }
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found"));
         User payer = userRepository.findById(payerId)

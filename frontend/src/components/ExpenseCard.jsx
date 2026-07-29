@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { formatCurrency } from '../utils/currencyFormatter'
 import { formatDateTime } from '../utils/dateFormatter'
 
-export default function ExpenseCard({ expense, currentUserId, onDelete }) {
+export default function ExpenseCard({ expense, currentUserId, onDelete, groupMembers }) {
   const [showShares, setShowShares] = useState(false)
 
-  const canDelete = expense.paidBy?.id === currentUserId
+  const isAdmin = groupMembers?.find(m => m.userId === currentUserId)?.role === 'ADMIN'
+  const canDelete = expense.paidBy?.id === currentUserId || isAdmin
 
   const handleDelete = () => {
     if (window.confirm(`Delete expense "${expense.description}"?`)) {
