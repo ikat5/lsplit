@@ -1,8 +1,11 @@
 import axios from 'axios'
 
+// TEMP DEBUG: verify the env var is baked in at build time
+console.log('API BASE URL:', import.meta.env.VITE_API_URL)
+
 const api = axios.create({
-  // Fall back to /api so local dev works via the Vite proxy even without an env file
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api'
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: { 'Content-Type': 'application/json' },
 })
 
 api.interceptors.request.use(config => {
