@@ -97,8 +97,8 @@ After pushing, open the repo on GitHub and confirm `backend/.env` is **not** the
 5. (Recommended) Under **Health Check Path**, set: `/api/health`
    — the backend now exposes this endpoint publicly and returns `{"status":"UP"}`.
 6. Click **Create Web Service**. The first Docker build takes ~3–5 minutes.
-7. When it shows **Live**, copy your backend URL, e.g. `https://l-split-backend.onrender.com`.
-8. Verify in a browser: `https://l-split-backend.onrender.com/api/health` → `{"status":"UP"}`.
+7. When it shows **Live**, copy your backend URL — yours is `https://lsplit.onrender.com`.
+8. Verify in a browser: `https://lsplit.onrender.com/api/health` → `{"status":"UP"}`.
 
 > **Free-tier behavior:** Render spins the service down after ~15 min of no traffic; the next
 > request takes ~30–60 s while it wakes up (and Neon's free tier may also be waking its compute).
@@ -122,7 +122,7 @@ After pushing, open the repo on GitHub and confirm `backend/.env` is **not** the
 
    | Key                 | Value |
    |---------------------|-------|
-   | `VITE_API_BASE_URL` | `https://l-split-backend.onrender.com/api` |
+   | `VITE_API_BASE_URL` | `https://lsplit.onrender.com/api` |
 
    Use **your** Render URL from Part 2 step 7. Keep the `/api` suffix, no trailing slash.
    Vite bakes this in at **build time** — if you ever change it, you must redeploy the frontend.
